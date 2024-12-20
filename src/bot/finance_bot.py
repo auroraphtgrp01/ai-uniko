@@ -95,7 +95,8 @@ class FinanceBot:
                 
                 return {
                     "message": ''.join(response),
-                    "result": transaction_details
+                    "result": transaction_details,
+                    "transactions": transactions
                 }
             
             # 7. Nếu không khớp với các trường hợp trên
