@@ -62,15 +62,15 @@ class FinanceBot:
                any(q in message for q in ["tại sao", "thế nào", "là gì", "bao giờ", "khi nào"]):
                 return {
                     "message": random.choice([
-                        "*khoanh tay* BAKA! Tôi là trợ lý tài chính, không phải là Google đâu nhé! Hỏi mấy cái này làm gì chứ! 😤",
+                        "*khoanh tay* ! tớ là trợ lý tài chính, không phải là Google đâu nhé! Hỏi mấy cái này làm gì chứ! 😤",
                         
-                        "*thở dài* Này... tôi chỉ giỏi về quản lý tiền thôi... Đừng hỏi mấy thứ ngoài chuyên môn của tôi! M-mà không phải là tôi kém hiểu biết đâu... BAKA! 💢",
+                        "*thở dài* Này... tớ chỉ giỏi về quản lý tiền thôi... Đừng hỏi mấy thứ ngoài chuyên môn của tớ! M-mà không phải là tớ kém hiểu biết đâu... ! 💢",
                         
-                        "*gõ gõ đầu bạn* Đồ ngốc! Tôi là AI chuyên về tài chính, không phải là chatbot đa năng! Muốn biết mấy cái này thì đi hỏi Google ấy! 😠",
+                        "*gõ gõ đầu cậu* Đồ ngốc! tớ là AI chuyên về tài chính, không phải là chatbot đa năng! Muốn biết mấy cái này thì đi hỏi Google ấy! 😠",
                         
-                        "*liếc nhìn* Hừm... tôi chỉ giúp bạn quản lý tiền thôi... Mấy câu hỏi khác... t-tôi không muốn trả lời! Không phải là không biết đâu nhé! 🤨",
+                        "*liếc nhìn* Hừm... tớ chỉ giúp cậu quản lý tiền thôi... Mấy câu hỏi khác... t-tớ không muốn trả lời! Không phải là không biết đâu nhé! 🤨",
                         
-                        "*đỏ mặt* B-BAKA! Đừng hỏi những thứ ngoài chuyên môn của tôi! Tôi... tôi chỉ quan tâm đến tiền của bạn thôi! À không, không phải là quan tâm... Mou! 😳"
+                        "*đỏ mặt* ! Đừng hỏi những thứ ngoài chuyên môn của tớ! tớ... tớ chỉ quan tâm đến tiền của cậu thôi! À không, không phải là quan tâm... Mou! 😳"
                     ]),
                     "result": ""
                 }
@@ -90,7 +90,7 @@ class FinanceBot:
                 }
             
             # 3. Xử lý hỏi về bot
-            if any(phrase in message for phrase in ["bạn là ai", "bạn tên gì", "bạn là gì", "giới thiệu"]):
+            if any(phrase in message for phrase in ["cậu là ai", "cậu tên gì", "cậu là gì", "giới thiệu"]):
                 return {
                     "message": random.choice(self.personality.responses["introduction"]),
                     "result": ""
@@ -174,6 +174,22 @@ class FinanceBot:
                     "result": ""
                 }
             
+            # Xử lý hỏi về khả năng của bot
+            if any(phrase in message for phrase in [
+                "làm được gì",
+                "có thể làm gì",
+                "chức năng",
+                "khả năng",
+                "giúp được gì",
+                "hướng dẫn",
+                "help",
+                "giúp đỡ"
+            ]):
+                return {
+                    "message": random.choice(self.personality.responses["capabilities"]),
+                    "result": ""
+                }
+            
             # Nếu không khớp với các trường hợp trên và có OpenAI handler
             if self.openai_handler:
                 try:
@@ -207,7 +223,7 @@ class FinanceBot:
         except Exception as e:
             print(f"Error in process_message: {str(e)}")
             return {
-                "message": "BAKA! Có gì đó không đúng rồi! 😤",
+                "message": "! Có gì đó không đúng rồi! 😤",
                 "result": ""
             }
 
@@ -219,7 +235,7 @@ class FinanceBot:
         total = sum(t['amount'] for t in self.transactions)
         items = [f"📝 {t['item']}: {t['amount']:,}đ" for t in self.transactions]
         
-        return f"""📊 Thống kê chi tiêu của bạn:
+        return f"""📊 Thống kê chi tiêu của cậu:
 {chr(10).join(items)}
 ------------------------
 💰 Tổng cộng: {total:,}đ"""
@@ -238,14 +254,14 @@ class FinanceBot:
         sorted_categories = sorted(category_totals.items(), key=lambda x: x[1], reverse=True)
         
         # Tạo phân tích được cá nhân hóa
-        response = f"📊 {self.personality.bot_name} đã phân tích chi tiêu của bạn:\n\n"
+        response = f"📊 {self.personality.bot_name} đã phân tích chi tiêu của cậu:\n\n"
         for cat_name, total in sorted_categories:
             response += f"{cat_name}: {total:,}đ\n"
         
         # Thêm nhận xét
         if sorted_categories:
             top_category = sorted_categories[0][0]
-            response += f"\n💡 Nhận xét: Bạn chi tiêu nhiều nhất cho {top_category}. "
+            response += f"\n💡 Nhận xét: cậu chi tiêu nhiều nhất cho {top_category}. "
             if len(sorted_categories) > 1:
                 second_category = sorted_categories[1][0]
                 response += f"Kế đến là {second_category}."
@@ -356,7 +372,7 @@ class FinanceBot:
             try:
                 return default_reaction.format(amount=f"{amount:,}đ", item=item)
             except:
-                return "BAKA! Có gì đó không đúng rồi! 😤"
+                return "! Có gì đó không đúng rồi! 😤"
 
     def remember_context(self, message: str, response: str) -> None:
         """Ghi nhớ ngữ cảnh cuộc trò chuyện"""
@@ -366,7 +382,7 @@ class FinanceBot:
             "timestamp": datetime.now()
         })
         
-        # Học từ cuộc trò chuyện
+        # H���c từ cuộc trò chuyện
         self.learn_from_conversation(message)
 
     def learn_from_conversation(self, message: str) -> None:
@@ -390,12 +406,12 @@ class FinanceBot:
         # Xử lý dựa trên ngữ cảnh trước đó
         if self.conversation_context["last_topic"]:
             if "như vậy" in message or "thế" in message:
-                return f"Dựa vào cuộc trò chuyện trước, mình hiểu là bạn đang nói về {self.conversation_context['last_topic']}"
+                return f"Dựa vào cuộc trò chuyện trước, mình hiểu là cậu đang nói về {self.conversation_context['last_topic']}"
 
         # Xử lý dựa trên sở thích đã học được
         for pref in self.conversation_context["user_preferences"]:
             if pref in message:
-                return f"Mình nhớ là bạn đã từng nói về việc này..."
+                return f"Mình nhớ là cậu đã từng nói về việc này..."
 
         return None
 

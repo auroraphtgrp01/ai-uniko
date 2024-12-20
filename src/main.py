@@ -18,7 +18,7 @@ def main():
     }])
     
     while True:
-        user_input = input("Bạn: ")
+        user_input = input("cậu: ")
         if user_input.lower() == "quit":
             break
             
