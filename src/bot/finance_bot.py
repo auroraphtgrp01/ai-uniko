@@ -64,10 +64,14 @@ class FinanceBot:
             transactions = self.text_parser.parse_transactions(message, self.wallets)
             if transactions:
                 response = []
+                transaction_details = ""
+                
                 for trans in transactions:
                     wallet_name = trans["wallet"]["name"]
-                    amount = trans["amount"]
-                    item = trans["item"]
+                    amount = f"{trans['amount']:,}đ".replace(",", ".")
+                    item = trans["item"].title()  # Capitalize mỗi từ
+                    category = trans['category']['name']
+                    trans_type = "Giao dịch đi" if trans["type"] == "EXPENSE" else "Giao dịch đến"
                     
                     # Thêm vào danh sách giao dịch
                     self.transactions.append(trans)
@@ -76,12 +80,29 @@ class FinanceBot:
                     reaction = self.get_tsundere_reaction(trans)
                     
                     # Thêm vào response
-                    response.append(f"- {item}: {amount:,}đ từ {wallet_name}")
+                    response.append(f"{reaction}\n")
+                    
+                    # Format HTML với line breaks rõ ràng và kiểu dáng
+                    transaction_details = f"""
+                    <div style="">
+                        <p style="margin: 5px 0;"><strong>📄 Tên giao dịch:</strong> <span style="font-weight: bold;">{item}</span></p>
+                        <p style="margin: 5px 0;"><strong>💰 Số Tiền:</strong> <span style="font-weight: bold;">{amount}</span></p>
+                        <p style="margin: 5px 0;"><strong>🏦 Ví:</strong> <span style="font-weight: bold;">{wallet_name}</span></p>
+                        <p style="margin: 5px 0;"><strong>📊 Phân loại:</strong> <span style="font-weight: bold;">{category}</span></p>
+                        <p style="margin: 5px 0;"><strong>🔄 Loại:</strong> <span style="font-weight: bold;">{trans_type}</span></p>
+                    </div>
+                    """
                 
-                return f"{reaction}\n" + "\n".join(response)
+                return {
+                    "message": ''.join(response),
+                    "result": transaction_details
+                }
             
             # 7. Nếu không khớp với các trường hợp trên
-            return random.choice(self.personality.responses["error"])
+            return {
+                "message": random.choice(self.personality.responses["error"]),
+                "result": ""
+            }
                 
         except Exception as e:
             print(f"Error in process_message: {e}")
@@ -90,7 +111,7 @@ class FinanceBot:
     def get_statistics(self) -> str:
         """Lấy thống kê chi tiêu"""
         if not self.transactions:
-            return "Chưa có giao dịch nào ��ược ghi nhận..."
+            return "Chưa có giao dịch nào ược ghi nhận..."
             
         total = sum(t['amount'] for t in self.transactions)
         items = [f"📝 {t['item']}: {t['amount']:,}đ" for t in self.transactions]
@@ -190,11 +211,10 @@ class FinanceBot:
             if "như vậy" in message or "thế" in message:
                 return f"Dựa vào cuộc trò chuyện trước, mình hiểu là bạn đang nói về {self.conversation_context['last_topic']}"
 
-        # Xử lý dựa trên sở thích đã học được
+        # X��� lý dựa trên sở thích đã học được
         for pref in self.conversation_context["user_preferences"]:
             if pref in message:
                 return f"Mình nhớ là bạn đã từng nói về việc này..."
 
         return None
 
-    # ... các method khác

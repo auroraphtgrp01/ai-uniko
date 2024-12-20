@@ -102,40 +102,41 @@ class TextParser:
 
     def parse_transactions(self, text: str, wallets: List[Dict]) -> List[Dict]:
         """Phân tích thông minh n giao dịch từ văn bản"""
-        text = text.lower()
+        text = text.lower().strip()
         results = []
-        
+
         # Tách các giao dịch bằng từ khóa liên kết
         transactions = re.split(r'\s*(?:rồi|sau đó|tiếp theo|và|với|cùng với|,)\s*', text)
         
+        # Xác định ví từ câu gốc
+        wallet = None
+        wallet_keywords = ['ví', 'từ', 'trong', 'tài khoản']
+        for keyword in wallet_keywords:
+            if keyword in text:
+                wallet_str = text[text.find(keyword):]
+                wallet = Wallet.find_wallet_by_text(wallets, wallet_str)
+                break
+        
+        # Nếu không tìm thấy ví cụ thể, dùng ví mặc định
+        if not wallet and wallets:
+            wallet = next((w for w in wallets if w["type"] == "WALLET" and "tiền mặt" in w["name"].lower()), wallets[0])
+
+        # Pattern để bắt: [mô tả] [số tiền + đơn vị]
+        amount_pattern = r'(.*?)\s+(\d+|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*(xị|củ|k|nghìn|ngàn|triệu|tỷ|đồng|vnd)?(?:\s|$)'
+
         for transaction in transactions:
-            if not transaction.strip():
+            transaction = transaction.strip()
+            if not transaction:
                 continue
-            
-            # Tìm số tiền và đơn vị trong văn bản
-            amount_pattern = r'(\d+|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*(xị|củ|k|nghìn|ngàn|triệu|tỷ|đồng|vnd)?'
-            amount_matches = list(re.finditer(amount_pattern, transaction))
-            
-            if amount_matches:
-                # Lấy match cuối cùng làm số tiền
-                amount_match = amount_matches[-1]
-                amount_str = transaction[amount_match.start():amount_match.end()]
+
+            # Tìm số tiền trong giao dịch
+            match = re.search(amount_pattern, transaction)
+            if match:
+                description, number, unit = match.groups()
+                amount_str = f"{number} {unit if unit else ''}"
                 
-                # Tách mô tả (phần trước số tiền)
-                description = transaction[:amount_match.start()].strip()
-                
-                # Tách phần ví (phần sau số tiền)
-                wallet_str = transaction[amount_match.end():].strip()
-                
-                # Xử lý số tiền bằng AmountParser
+                # Xử lý số tiền
                 amount = self.amount_parser.normalize_amount(amount_str)
-                
-                # Xác định ví
-                wallet = None
-                if wallet_str:
-                    wallet = Wallet.find_wallet_by_text(wallets, wallet_str)
-                if not wallet and wallets:
-                    wallet = next((w for w in wallets if w["type"] == "WALLET" and "tiền mặt" in w["name"].lower()), wallets[0])
                 
                 # Làm sạch mô tả
                 description = description.strip()
@@ -156,7 +157,7 @@ class TextParser:
                 description = ' '.join(description.split())
                 
                 # Thêm vào kết quả nếu hợp lệ
-                if description and amount > 0 and wallet:
+                if description and amount > 0:
                     result = {
                         "item": description.strip(),
                         "amount": int(amount),
@@ -165,7 +166,7 @@ class TextParser:
                         "wallet": wallet
                     }
                     results.append(result)
-                
+        
         return results
 
     def categorize_transaction(self, description: str) -> dict:
