@@ -1,5 +1,5 @@
 from src.utils.response_formatter import ResponseFormatter
-from bot.finance_bot import FinanceBot
+from src.bot.finance_bot import FinanceBot
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -159,7 +159,7 @@ async def get_statistics():
     """Lấy thống kê chi tiêu"""
     if not bot.transactions:
         return {
-            "message": "Ch��a có giao dịch nào được ghi nhận",
+            "message": "Chưa có giao dịch nào được ghi nhận",
             "statistics": None
         }
 

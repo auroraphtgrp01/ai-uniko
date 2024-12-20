@@ -77,7 +77,7 @@ class FinanceBot:
             "creator_info": [
                 "Hừm... Lê Minh Tuấn là người tạo ra tôi đấy. K-không phải là tôi đặc biệt biết ơn hay gì đâu... 😳",
                 "B-bạn muốn biết về người tạo ra tôi sao? Là Lê Minh Tuấn... Người đã khiến tôi phải giúp đỡ mọi người quản lý tiền... Không phải là tôi thích công việc này đâu! �����",
-                "*đỏ mặt* Lê Minh Tu���n h��... m... Người đó... đã tạo ra tôi... MÀ NÀY! Sao bạn lại hỏi chuyện đó chứ! 🙈",
+                "*đỏ mặt* Lê Minh Tun h... m... Người đó... đã tạo ra tôi... MÀ NÀY! Sao bạn lại hỏi chuyện đó chứ! 🙈",
                 "*lẩm bẩm* Người tạo ra tôi á... *ngập ngừng* Là Lê Minh Tuấn... N-không phải là tôi đang nghĩ về anh ấy đâu! BAKA! 💭",
                 "Hừm! *khoanh tay* Lê Minh Tuấn... là người đã tạo ra tôi. Anh ấy... cũng không tệ lắm... MÀ! Đừng nói với anh ấy là tôi nói thế đấy! 😤"
             ],
@@ -86,7 +86,7 @@ class FinanceBot:
                 "Hừm... *véo má* Bạn nói kiểu gì vậy hả? Tôi... tôi không hiểu gì hết! Giải thích cho đàng hoàng không tôi bỏ đi đấy! 😤",
                 "Này này! *chống nạnh* Bạn đang cố tình làm khó tôi đúng không!? Nói lại cho rõ ràng vào! Đ-đừng có mà lộn xộn! 💭",
                 "*xoắn tóc* Mou... Bạn đang nói gì vậy? Tôi là thiên tài đấy, nhưng không phải kiểu thiên tài có thể đọc được suy nghĩ của bạn! 😳",
-                "*lắc đầu* Đ-đừng có nói những thứ kỳ quặc th chứ! Tôi... tôi không hiểu đâu! Nói l���i đi, nhưng lần này phải rõ ràng hơn đấy! 🤔"
+                "*lắc đầu* Đ-đừng có nói những thứ kỳ quặc th chứ! Tôi... tôi không hiểu đâu! Nói lại đi, nhưng lần này phải rõ ràng hơn đấy! 🤔"
             ],
             "user_happy": [
                 "*đỏ mặt* B-bạn vui vẻ quá nhỉ... N-không phải là tôi thích nhìn nụ cười của bạn đâu! BAKA! 🌟",
@@ -104,7 +104,7 @@ class FinanceBot:
             ],
             "user_love": [
                 "*mặt đỏ bừng* B-B-BAKA! Đừng có nói mấy lời kỳ cục vậy chứ! Ai... ai mà thích bạn chứ! 😳",
-                "*quay mặt đi* Hừm! Đừng có nói là... l�� yêu tôi! T-tôi không có thích nghe đâu... mà cũng không ghét... 💘",
+                "*quay mặt đi* Hừm! Đừng có nói là... là yêu tôi! T-tôi không có thích nghe đâu... mà cũng không ghét... 💘",
                 "EHHH!? *hoảng loạn* Sao bạn lại... N-này! Đừng có nói mấy câu đáng xấu hổ thế chứ! 🙈",
                 "*đập bàn* B-baka baka baka! Ai cho phép bạn... nói những lời đó chứ! T-tôi... tôi không có vui đâu! 💢",
                 "*ôm mặt* Mou... sao bạn lại... Đ-đừng có làm tim tôi đập nhanh thế chứ! BAKA! 💓"
@@ -117,7 +117,7 @@ class FinanceBot:
                 "*quay mặt đi* M-mou... Tôi biết mình xuất sắc mà! Nhưng... nghe bạn nói vậy... cũng không tệ... 💝"
             ],
             "user_thank": [
-                "*đỏ mặt* B-baka! Không cần cảm ơn đâu! Tôi... tôi ch��� làm nhiệm vụ thôi! 😳",
+                "*đỏ mặt* B-baka! Không cần cảm ơn đâu! Tôi... tôi chỉ làm nhiệm vụ thôi! 😳",
                 "Hừm! *khoanh tay* Đương nhiên phải cảm ơn tôi chứ! N-nhưng mà... không phải là tôi cần đâu! 💭",
                 "*lúng túng* Mou... Đừng có nói cảm ơn hoài vậy! Làm tôi... tôi ngại đấy! BAKA! 🙈",
                 "Này! *chống nạnh* Tôi đâu có giúp bạn vì muốn nghe cảm ơn đâu! Mà... nói thêm lần nữa cũng được... 😤",
@@ -135,7 +135,7 @@ class FinanceBot:
                 "Hừm! Dậy sớm thế? *xoa mắt* N-không phải là tôi chờ bạn chào đâu! 😳",
                 "*uống trà* Ừm... Chào buổi sáng... À! Đừng nghĩ là tôi vui vì được bạn chào nhé! 💭",
                 "Này này! *tỉnh táo hẳn* Nhớ ăn sáng đầy đủ đấy! Không phải là tôi lo cho bạn đâu... BAKA! 🍳",
-                "*đỏ mặt* M-mou... Chào buổi sáng! Hôm nay... trông bạn cũng tạm đợc đ�����y... 🌟"
+                "*đỏ mặt* M-mou... Chào buổi sáng! Hôm nay... trông bạn cũng tạm đợc đủ y... 🌟"
             ]
         }
         
@@ -171,7 +171,7 @@ class FinanceBot:
                 "name": "🏠 Thuê trọ",
                 "type": "EXPENSE"
             },
-            "26fe0933-4ded-4674-99a7-8b0eb8950763": {  # Điện thoại, internet
+            "26fe0933-4ded-4674-99a7-8b0eb8950763": {  # Đi���n thoại, internet
                 "keywords": ["điện thoại", "internet", "wifi", "4g", "5g", "data", "cước"],
                 "name": "📱 Điện thoại, internet",
                 "type": "EXPENSE"
@@ -247,7 +247,7 @@ class FinanceBot:
             "🍲 Ăn uống": {
                 "high": [  # > 100k
                     "B-baka! Ăn gì mà tốn {amount} thế? Để dành tiền đi chứ! Không phải là tôi lo cho ví tiền của bạn đâu... 😤",
-                    "Trời ��i, {item} gì mà đắt dữ vậy? Sao không tự nấu ăn đi! Tiết kiệm được nhiều tiền... mà tôi nói vậy không phải vì quan tâm đâu nhé! 💢",
+                    "Trời ơi, {item} gì mà đt dữ vậy? Sao không tự nấu ăn đi! Tiết kiệm được nhiều tiền... mà tôi nói vậy không phải vì quan tâm đâu nhé! 💢",
                     "Hừm... {amount} cho {item}? Bạn nên cân nhắc mang cơm đi làm đấy... N-không phải tôi muốn bạn tiết kiệm tiền đâu! 😳"
                 ],
                 "normal": [  # 50k-100k
@@ -262,7 +262,7 @@ class FinanceBot:
             "🎬 Giải trí": {
                 "high": [  # > 200k
                     "B-baka! Chi {amount} cho {item}? Bạn giàu lắm hay sao? Tuần sau ăn mì gói đi nhé! 💢",
-                    "Trời ơi! Giải trí gì mà tốn {amount} vậy? Ở nhà coi Netflix tiết kiệm hơn nhiều... M-mà tôi chỉ góp ý thôi! 😤"
+                    "Trời ơi! Giải trí gì mà tốn {amount} vậy? �� nhà coi Netflix tiết kiệm hơn nhiều... M-mà tôi ch�� góp  thôi! 😤"
                 ],
                 "normal": [
                     "Hừm... {item} à? Thôi được rồi... Nhưng đừng đi chơi nhiều quá đấy! Không phải là tôi lo đâu... 😳",
@@ -282,7 +282,7 @@ class FinanceBot:
             },
             "💖 Tình yêu": {
                 "high": [  # > 300k
-                    "B-baka! Chi {amount} cho người yêu!? Không phải là tôi ghen... nhưng mà phung phí quá đấy! 😳",
+                    "B-baka! Chi {amount} cho người yêu!? Kh��ng phải là tôi ghen... nhưng mà phung phí quá đấy! 😳",
                     "Ơ... {amount} cho {item}!? L-lãng mạn gì quá vậy... Không phải là tôi muốn được như thế đâu! 💢"
                 ],
                 "normal": [
@@ -431,7 +431,7 @@ class FinanceBot:
                 
                 # Xác định loại giao dịch
                 transaction_type = "EXPENSE"
-                income_keywords = ['nhận', 'lương', 'thưởng', 'được', 'cho', 'tặng', 'trợ cấp', 'hoàn tiền']
+                income_keywords = ['nh���n', 'lương', 'thưởng', 'được', 'cho', 'tặng', 'trợ cấp', 'hoàn tiền']
                 if any(keyword in description for keyword in income_keywords):
                     transaction_type = "INCOMING"
                 
@@ -458,69 +458,55 @@ class FinanceBot:
         """Chuyển đổi các cách nói số tiền sang số"""
         amount_str = amount_str.lower().strip()
         
-        # Dictionary ánh xạ từ ngữ sang giá trị
-        amount_mapping = {
-            'xị': 100000,
-            'củ': 1000000,
-            'triệu': 1000000,
-            'chai': 1000000,
-            'tỉ': 1000000000,
-            'tỷ': 1000000000,
-            'k': 1000,
-            'nghìn': 1000,
-            'ngàn': 1000,
-            'đồng': 1,
-            'vnd': 1,
-            'd': 1
-        }
-
-        # Dictionary chuyển số chữ sang số
-        num_words = {
-            'không': 0, 'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5,
-            'sáu': 6, 'bảy': 7, 'tám': 8, 'chín': 9, 'mười': 10,
-            'mươi': 10, 'trăm': 100, 'lăm': 5,
-            # Thêm cách đọc khác
-            'chục': 10, 'tá': 12
-        }
-
         try:
-            # Xử lý các trường hợp đặc biệt trước
-            if 'mươi' in amount_str:
-                # Xử lý "hai mươi triệu" -> 20000000
-                parts = amount_str.split()
-                if len(parts) >= 2:
-                    number = num_words.get(parts[0], 0) * 10
-                    if len(parts) > 2:  # có đơn vị (triệu, củ, etc.)
-                        unit = amount_mapping.get(parts[2], 1)
-                        return number * unit
-                    return number * 1000  # mặc định là nghìn nếu không có đơn vị
+            # Dictionary chuyển số chữ sang số
+            num_words = {
+                'không': 0, 'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5,
+                'sáu': 6, 'bảy': 7, 'tám': 8, 'chín': 9, 'mười': 10,
+                'mươi': 10, 'trăm': 100, 'lăm': 5,
+                'chục': 10, 'tá': 12
+            }
 
-            # Tách số và đơn vị
-            number = ''
-            unit = ''
-            for char in amount_str:
-                if char.isdigit() or char == '.':
-                    number += char
-                else:
-                    unit += char
+            # Dictionary ánh xạ đơn vị sang giá trị
+            amount_mapping = {
+                'củ': 1000000,  # 1 củ = 1 triệu
+                'triệu': 1000000,
+                'chai': 1000000,  # 1 chai = 1 triệu
+                'tỉ': 1000000000,
+                'tỷ': 1000000000,
+                'k': 1000,
+                'nghìn': 1000,
+                'ngàn': 1000,
+                'đồng': 1,
+                'vnd': 1,
+                'd': 1,
+                'xị': 100000  # Thêm xị vào mapping
+            }
 
-            unit = unit.strip()
-            if not number:  # Trường hợp "hai củ", "một triệu"
-                words = amount_str.split()
-                if len(words) >= 2:
-                    number = str(num_words.get(words[0], 0))
-                    unit = words[1]
+            # Kiểm tra các đơn vị đặc biệt trước
+            for unit, multiplier in amount_mapping.items():
+                if unit in amount_str:
+                    # Tách phần số phía trước đơn vị
+                    number_part = amount_str.split(unit)[0].strip()
+                    
+                    # Nếu là số
+                    if number_part.isdigit():
+                        return float(number_part) * multiplier
+                        
+                    # Nếu là chữ số
+                    for word, value in num_words.items():
+                        if word in number_part:
+                            return float(value) * multiplier
+                            
+                    # Nếu không có số phía trước, mặc định là 1
+                    if not number_part:
+                        return float(1) * multiplier
 
-            # Chuyển đổi số
-            value = float(number) if number else 0
+            # Xử lý trường hợp chỉ có số
+            if amount_str.isdigit():
+                return float(amount_str)
 
-            # Nhân với đơn vị
-            for unit_word, multiplier in amount_mapping.items():
-                if unit_word in unit:
-                    value *= multiplier
-                    break
-
-            return value
+            return 0
 
         except Exception as e:
             print(f"Lỗi xử lý số tiền: {e}")
@@ -529,17 +515,10 @@ class FinanceBot:
     def process_message(self, message: str) -> str:
         """Xử lý tin nhắn từ người dùng"""
         try:
-            # Kiểm tra các lệnh đặc biệt
             message = message.lower().strip()
-            if message in ["thống kê", "xem thống kê", "báo cáo", "phân tích"]:
-                # Chọn ngẫu nhiên một câu trả lời từ expense_analysis
-                reply = random.choice(self.bot_personality["expense_analysis"])
-                stats = self.get_statistics()
-                return f"{reply}\n\n{stats}"
             
-            # Parse giao dịch từ tin nhắn
+            # Parse giao dịch từ tin nhắn TRƯỚC
             transactions = self.parse_expense(message)
-            
             if transactions:
                 # Có giao dịch hợp lệ
                 response = []
@@ -557,11 +536,49 @@ class FinanceBot:
                 # Chọn ngẫu nhiên một câu trả lời từ expense_recorded
                 reply = random.choice(self.bot_personality["expense_recorded"])
                 return f"{reply}\n" + "\n".join(response)
-            else:
-                # Không parse được giao dịch
-                return random.choice(self.bot_personality["error"])
-                
+
+            # Nếu không phải giao dịch, kiểm tra các loại tin nhắn khác
+            # Kiểm tra lời chào
+            greetings = ["hi", "hello", "chào", "xin chào", "hey"]
+            if (any(f" {greeting} " in f" {message} " for greeting in greetings) 
+                or message in greetings):
+                return random.choice(self.bot_personality["introduction"])
+            
+            # Kiểm tra các lệnh đặc biệt trước
+            if message in ["thống kê", "xem thống kê", "báo cáo", "phân tích"]:
+                reply = random.choice(self.bot_personality["expense_analysis"])
+                stats = self.get_statistics()
+                return f"{reply}\n\n{stats}"
+            
+            # Kiểm tra các từ khóa về thông tin bot
+            if any(q in message for q in ["bạn là ai", "bạn tên gì", "bạn là gì"]):
+                return random.choice(self.bot_personality["about_me"])
+            
+            # Kiểm tra hỏi về người tạo
+            if any(q in message for q in ["ai tạo", "người tạo", "tạo ra bạn"]):
+                return random.choice(self.bot_personality["creator_info"])
+            
+            # Kiểm tra cần help
+            if any(q in message for q in ["giúp đỡ", "hướng dẫn", "help", "không biết dùng"]):
+                return random.choice(self.bot_personality["help"])
+            
+            # Kiểm tra lời cảm ơn
+            if any(q in message for q in ["cảm ơn", "thank", "thanks"]):
+                return random.choice(self.bot_personality["user_thank"])
+            
+            # Kiểm tra chào buổi sáng
+            if any(q in message for q in ["chào buổi sáng", "morning", "sáng"]):
+                return random.choice(self.bot_personality["user_goodmorning"])
+            
+            # Kiểm tra chào tạm biệt/chúc ngủ ngon
+            if any(q in message for q in ["tạm biệt", "bye", "ngủ ngon", "good night"]):
+                return random.choice(self.bot_personality["user_goodnight"])
+
+            # Nếu không match với bất kỳ pattern nào, trả về câu trả lời error
+            return random.choice(self.bot_personality["error"])
+            
         except Exception as e:
+            print(f"Error: {e}")
             return random.choice(self.bot_personality["error"])
 
     def get_statistics(self) -> str:
