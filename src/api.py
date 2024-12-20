@@ -1,4 +1,10 @@
-from src.utils.response_formatter import ResponseFormatter
+import sys
+from pathlib import Path
+root_path = str(Path(__file__).parent.parent)
+if root_path not in sys.path:
+    sys.path.append(root_path)
+
+from utils.response_formatter import ResponseFormatter
 from src.bot.finance_bot import FinanceBot
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,7 +12,6 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional, Generator
 import uvicorn
-import sys
 import os
 import asyncio
 import json

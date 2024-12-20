@@ -2,13 +2,13 @@ from datetime import datetime
 import random
 from typing import List, Dict, Optional
 
-from src.models.wallet import Wallet
-from src.utils.amount_parser import AmountParser
+from utils.amount_parser import AmountParser
 from src.utils.text_parser import TextParser
-from src.bot.personality import BotPersonality
+from bot.personality import BotPersonality
+from utils.openai_handler import OpenAIHandler
 
 class FinanceBot:
-    def __init__(self):
+    def __init__(self, openai_api_key: str = None):
         self.transactions = []
         self.conversation_history = []
         self.personality = BotPersonality()
@@ -24,6 +24,8 @@ class FinanceBot:
             "common_transactions": {}
         }
 
+        self.openai_handler = OpenAIHandler(openai_api_key) if openai_api_key else None
+
     def set_wallets(self, wallets: list) -> None:
         """Cập nhật danh sách ví"""
         self.wallets = wallets
@@ -33,34 +35,97 @@ class FinanceBot:
             wallets[0] if wallets else None
         )
 
-    def process_message(self, message: str) -> str:
+    def process_message(self, message: str) -> dict:
         """Xử lý tin nhắn từ người dùng"""
         try:
             message = message.lower().strip()
             
+            # 0. Xử lý khi bị chửi
+            insult_type = self.personality.check_insult(message)
+            if insult_type:
+                return {
+                    "message": random.choice(self.personality.responses[insult_type]),
+                    "result": ""
+                }
+
+            # 1. Xử lý các câu hỏi ngoài luồng
+            off_topic_keywords = [
+                "thời tiết", "chính trị", "thể thao", "bóng đá", 
+                "âm nhạc", "phim ảnh", "game", "trò chơi",
+                "tình yêu", "hẹn hò", "tâm sự", "du lịch",
+                "ẩm thực", "nấu ăn", "công thức", "thời trang",
+                "làm đẹp", "sức khỏe", "bệnh tật", "thuốc",
+                "học tập", "thi cử", "trường học"
+            ]
+            
+            if any(keyword in message for keyword in off_topic_keywords) or \
+               any(q in message for q in ["tại sao", "thế nào", "là gì", "bao giờ", "khi nào"]):
+                return {
+                    "message": random.choice([
+                        "*khoanh tay* BAKA! Tôi là trợ lý tài chính, không phải là Google đâu nhé! Hỏi mấy cái này làm gì chứ! 😤",
+                        
+                        "*thở dài* Này... tôi chỉ giỏi về quản lý tiền thôi... Đừng hỏi mấy thứ ngoài chuyên môn của tôi! M-mà không phải là tôi kém hiểu biết đâu... BAKA! 💢",
+                        
+                        "*gõ gõ đầu bạn* Đồ ngốc! Tôi là AI chuyên về tài chính, không phải là chatbot đa năng! Muốn biết mấy cái này thì đi hỏi Google ấy! 😠",
+                        
+                        "*liếc nhìn* Hừm... tôi chỉ giúp bạn quản lý tiền thôi... Mấy câu hỏi khác... t-tôi không muốn trả lời! Không phải là không biết đâu nhé! 🤨",
+                        
+                        "*đỏ mặt* B-BAKA! Đừng hỏi những thứ ngoài chuyên môn của tôi! Tôi... tôi chỉ quan tâm đến tiền của bạn thôi! À không, không phải là quan tâm... Mou! 😳"
+                    ]),
+                    "result": ""
+                }
+
             # 1. Xử lý chào hỏi
             if any(word in message for word in ["chào", "hi", "hello", "xin chào"]):
-                return random.choice(self.personality.responses["introduction"])
+                return {
+                    "message": random.choice(self.personality.responses["greeting"]),
+                    "result": ""
+                }
             
-            # 2. Xử lý hỏi về bot
+            # 2. Xử lý chúc ngủ ngon
+            if any(word in message for word in ["ngủ ngon", "oyasumi", "good night"]):
+                return {
+                    "message": random.choice(self.personality.responses["goodnight"]),
+                    "result": ""
+                }
+            
+            # 3. Xử lý hỏi về bot
             if any(phrase in message for phrase in ["bạn là ai", "bạn tên gì", "bạn là gì", "giới thiệu"]):
-                return random.choice(self.personality.responses["about_me"])
+                return {
+                    "message": random.choice(self.personality.responses["introduction"]),
+                    "result": ""
+                }
             
-            # 3. Xử lý cảm ơn
+            # 4. Xử lý cảm ơn
             if any(word in message for word in ["cảm ơn", "thank", "thanks"]):
-                return random.choice(self.personality.responses["user_thank"])
+                return {
+                    "message": random.choice(self.personality.responses["praise"]),
+                    "result": ""
+                }
             
-            # 4. Xử lý yêu cầu trợ giúp
+            # 5. Xử lý yêu cầu trợ giúp
             if any(word in message for word in ["giúp", "help", "hướng dẫn", "cách dùng"]):
-                return random.choice(self.personality.responses["help"])
+                return {
+                    "message": random.choice(self.personality.responses["help"]),
+                    "result": ""
+                }
             
-            # 5. Xử lý thống kê/báo cáo
+            # 6. Xử lý tạm biệt
+            if any(word in message for word in ["tạm biệt", "bye", "goodbye", "sayonara"]):
+                return {
+                    "message": random.choice(self.personality.responses["farewell"]),
+                    "result": ""
+                }
+            
+            # 7. Xử lý thống kê/báo cáo
             if any(word in message for word in ["thống kê", "xem thống kê", "báo cáo", "phân tích"]):
-                reply = random.choice(self.personality.responses["expense_analysis"])
                 stats = self.get_statistics()
-                return f"{reply}\n\n{stats}"
+                return {
+                    "message": random.choice(self.personality.responses["praise"]),
+                    "result": stats
+                }
             
-            # 6. Xử lý giao dịch
+            # 8. Xử lý giao dịch
             transactions = self.text_parser.parse_transactions(message, self.wallets)
             if transactions:
                 response = []
@@ -69,7 +134,7 @@ class FinanceBot:
                 for trans in transactions:
                     wallet_name = trans["wallet"]["name"]
                     amount = f"{trans['amount']:,}đ".replace(",", ".")
-                    item = trans["item"].title()  # Capitalize mỗi từ
+                    item = trans["item"].title()
                     category = trans['category']['name']
                     trans_type = "Giao dịch đi" if trans["type"] == "EXPENSE" else "Giao dịch đến"
                     
@@ -99,15 +164,52 @@ class FinanceBot:
                     "transactions": transactions
                 }
             
-            # 7. Nếu không khớp với các trường hợp trên
+            # 9. Xử lý hỏi về người tạo
+            if any(phrase in message for phrase in [
+                "ai tạo ra", "ai làm ra", "ai viết ra", "ai tạo", "ai phát triển",
+                "do ai", "của ai", "ai là người tạo", "ai là người làm"
+            ]):
+                return {
+                    "message": random.choice(self.personality.responses["creator"]),
+                    "result": ""
+                }
+            
+            # Nếu không khớp với các trường hợp trên và có OpenAI handler
+            if self.openai_handler:
+                try:
+                    import asyncio
+                    # Tạo event loop mới nếu cần
+                    try:
+                        loop = asyncio.get_event_loop()
+                    except RuntimeError:
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                    
+                    # Chạy coroutine và đợi kết quả
+                    ai_response = loop.run_until_complete(
+                        self.openai_handler.get_response(message)
+                    )
+                    
+                    if ai_response:
+                        return {
+                            "message": ai_response,
+                            "result": ""
+                        }
+                except Exception as e:
+                    print(f"Error in OpenAI processing: {str(e)}")
+
+            # Fallback nếu không có OpenAI hoặc có lỗi
             return {
-                "message": random.choice(self.personality.responses["error"]),
+                "message": random.choice(self.personality.responses["confused"]),
                 "result": ""
             }
                 
         except Exception as e:
-            print(f"Error in process_message: {e}")
-            return random.choice(self.personality.responses["error"])
+            print(f"Error in process_message: {str(e)}")
+            return {
+                "message": "BAKA! Có gì đó không đúng rồi! 😤",
+                "result": ""
+            }
 
     def get_statistics(self) -> str:
         """Lấy thống kê chi tiêu"""
@@ -151,32 +253,110 @@ class FinanceBot:
         return response
 
     def get_tsundere_reaction(self, transaction: dict) -> str:
-        """Tạo phản ứng tsundere dựa trên giao dịch"""
-        category = transaction['category']['name']
-        amount = transaction['amount']
-        item = transaction['item']
-        
-        # Lấy reactions cho category
-        reactions = self.personality.tsundere_reactions.get(
-            category, 
-            self.personality.tsundere_reactions['DEFAULT']
-        )
-        
-        # Xác định mức độ chi tiêu
-        if category == "🍲 Ăn uống":
-            level = "high" if amount > 100000 else "low" if amount < 50000 else "normal"
-        elif category == "🎬 Giải trí":
-            level = "high" if amount > 200000 else "normal"
-        elif category == "🛍️ Mua sắm":
-            level = "high" if amount > 500000 else "normal"
-        elif category == "💖 Tình yêu":
-            level = "high" if amount > 300000 else "normal"
-        else:
-            level = "high" if amount > 200000 else "normal"
-        
-        # Format reaction với thông tin chi tiêu
-        reaction = random.choice(reactions[level])
-        return reaction.format(amount=f"{amount:,}đ", item=item)
+        """Tạo phản ứng tsundere dựa trên loại giao dịch"""
+        try:
+            amount = transaction['amount']
+            item = transaction['item']
+            trans_type = transaction['type']  # INCOMING hoặc EXPENSE
+            category = transaction['category']['name']  # Lấy tên category với emoji
+            
+            # Debug log
+            print(f"Processing transaction:")
+            print(f"- Type: {trans_type}")
+            print(f"- Category: {category}")
+            print(f"- Amount: {amount}")
+            print(f"- Item: {item}")
+
+            # Xác định level dựa vào amount và category
+            if trans_type == "INCOMING":
+                if category == "💼 Lương":
+                    if amount < 5000000:
+                        level = "low"
+                    elif amount < 15000000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                elif category == "🎉 Tiền thưởng":
+                    if amount < 1000000:
+                        level = "low"
+                    elif amount < 5000000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                elif category == "⏰ Làm thêm":
+                    if amount < 500000:
+                        level = "low"
+                    elif amount < 2000000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                else:  # OTHER
+                    if amount < 1000000:
+                        level = "low"
+                    elif amount < 5000000:
+                        level = "medium"
+                    else:
+                        level = "high"
+            else:  # EXPENSE
+                if category == "🍲 Ăn uống":
+                    if amount < 50000:
+                        level = "low"
+                    elif amount < 200000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                elif category == "🛍️ Mua sắm":
+                    if amount < 100000:
+                        level = "low"
+                    elif amount < 500000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                elif category == "🎬 Giải trí":
+                    if amount < 100000:
+                        level = "low"
+                    elif amount < 300000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                elif category == "💖 Tình yêu":
+                    if amount < 100000:
+                        level = "low"
+                    elif amount < 300000:
+                        level = "medium"
+                    else:
+                        level = "high"
+                else:  # OTHER
+                    if amount < 100000:
+                        level = "low"
+                    elif amount < 500000:
+                        level = "medium"
+                    else:
+                        level = "high"
+
+            print(f"- Determined level: {level}")
+
+            # Lấy reactions cho category cụ thể hoặc fallback về OTHER
+            reactions = self.personality.tsundere_reactions[trans_type].get(
+                category,
+                self.personality.tsundere_reactions[trans_type]["OTHER"]
+            )
+            
+            # Chọn ngẫu nhiên một reaction và format
+            reaction = random.choice(reactions[level])
+            formatted_reaction = reaction.format(amount=f"{amount:,}đ", item=item)
+            
+            print(f"- Selected reaction: {formatted_reaction}")
+            return formatted_reaction
+            
+        except Exception as e:
+            print(f"Error in get_tsundere_reaction: {str(e)}")
+            # Fallback về reaction mặc định nếu có lỗi
+            default_reaction = "Hừm... {amount} cho {item}... T-tạm được! 💭"
+            try:
+                return default_reaction.format(amount=f"{amount:,}đ", item=item)
+            except:
+                return "BAKA! Có gì đó không đúng rồi! 😤"
 
     def remember_context(self, message: str, response: str) -> None:
         """Ghi nhớ ngữ cảnh cuộc trò chuyện"""
@@ -212,7 +392,7 @@ class FinanceBot:
             if "như vậy" in message or "thế" in message:
                 return f"Dựa vào cuộc trò chuyện trước, mình hiểu là bạn đang nói về {self.conversation_context['last_topic']}"
 
-        # X��� lý dựa trên sở thích đã học được
+        # Xử lý dựa trên sở thích đã học được
         for pref in self.conversation_context["user_preferences"]:
             if pref in message:
                 return f"Mình nhớ là bạn đã từng nói về việc này..."

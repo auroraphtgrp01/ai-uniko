@@ -1,7 +1,11 @@
-from typing import Dict, List
-import re
-from src.models.wallet import Wallet
 from src.utils.amount_parser import AmountParser
+from src.models.wallet import Wallet
+import re
+from typing import Dict, List
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
+
 
 class TextParser:
     def __init__(self):
@@ -69,7 +73,7 @@ class TextParser:
             },
             # Thu nhập
             "cc13076d-54d2-43d6-a924-2b69ca0e7642": {  # Tiền thưởng
-                "keywords": ["thưởng", "bonus", "thưởng tết", "thưởng dự án"],
+                "keywords": ["thưởng", "bonus", "thưởng tt", "thưởng dự án"],
                 "name": "💵 Tiền thưởng",
                 "type": "INCOMING"
             },
@@ -106,8 +110,9 @@ class TextParser:
         results = []
 
         # Tách các giao dịch bằng từ khóa liên kết
-        transactions = re.split(r'\s*(?:rồi|sau đó|tiếp theo|và|với|cùng với|,)\s*', text)
-        
+        transactions = re.split(
+            r'\s*(?:rồi|sau đó|tiếp theo|và|với|cùng với|,)\s*', text)
+
         # Xác định ví từ câu gốc
         wallet = None
         wallet_keywords = ['ví', 'từ', 'trong', 'tài khoản']
@@ -116,13 +121,21 @@ class TextParser:
                 wallet_str = text[text.find(keyword):]
                 wallet = Wallet.find_wallet_by_text(wallets, wallet_str)
                 break
-        
+
         # Nếu không tìm thấy ví cụ thể, dùng ví mặc định
         if not wallet and wallets:
-            wallet = next((w for w in wallets if w["type"] == "WALLET" and "tiền mặt" in w["name"].lower()), wallets[0])
+            wallet = next(
+                (w for w in wallets if w["type"] == "WALLET" and "tiền mặt" in w["name"].lower()), wallets[0])
 
-        # Pattern để bắt: [mô tả] [số tiền + đơn vị]
-        amount_pattern = r'(.*?)\s+(\d+|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*(xị|củ|k|nghìn|ngàn|triệu|tỷ|đồng|vnd)?(?:\s|$)'
+        # Điều chỉnh pattern để bắt: [hành động/động từ] [hết/mất] [số tiền + đơn vị]
+        amount_pattern = r'(.*?)(?:\s+(?:hết|mất|tốn|chi)\s+)?(\d+|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*(xị|củ|k|nghìn|ngàn|triệu|tỷ|đồng|vnd)?(?:\s|$)'
+
+        # Cập nhật danh sách từ khóa thu nhập
+        income_keywords = [
+            'nhận', 'lương', 'thưởng', 'được', 'cho', 'tặng', 'trợ cấp', 'hoàn tiền',
+            'lãi', 'tiền lãi', 'cổ tức', 'tiền về', 'chuyển khoản', 'chuyển tiền',
+            'thu nhập', 'thu', 'kiếm', 'bán', 'bán được'
+        ]
 
         for transaction in transactions:
             transaction = transaction.strip()
@@ -134,55 +147,60 @@ class TextParser:
             if match:
                 description, number, unit = match.groups()
                 amount_str = f"{number} {unit if unit else ''}"
-                
+
                 # Xử lý số tiền
                 amount = self.amount_parser.normalize_amount(amount_str)
-                
-                # Làm sạch mô tả
-                description = description.strip()
-                money_keywords = ['đồng', 'vnd', 'nghìn', 'ngàn', 'k', 'hết', 'mất', 'tốn', 'chi', 'xị', 'củ']
-                for keyword in money_keywords:
-                    description = description.replace(keyword, '')
-                
-                # Xác định loại giao dịch
-                transaction_type = "EXPENSE"
-                income_keywords = ['nhận', 'lương', 'thưởng', 'được', 'cho', 'tặng', 'trợ cấp', 'hoàn tiền']
-                if any(keyword in description for keyword in income_keywords):
+
+                # Xác định loại giao dịch TRƯỚC KHI làm bất cứ điều gì khác
+                transaction_type = "EXPENSE"  # Mặc định là chi tiêu
+                description_lower = description.lower()
+
+                # Kiểm tra từ khóa thu nhập
+                if any(keyword in description_lower for keyword in income_keywords):
                     transaction_type = "INCOMING"
-                
-                # Tìm category
+
+                # Tìm category và cụm từ có ý nghĩa
                 best_category = self.categorize_transaction(description)
-                
-                # Làm sạch mô tả cuối cùng
-                description = ' '.join(description.split())
-                
+                meaningful_phrase = self.extract_meaningful_phrase(
+                    description.lower())
+
+                # Sử dụng cụm từ có ý nghĩa làm mô tả
+                description = meaningful_phrase if meaningful_phrase else description.strip()
+
+                # Xóa các từ khóa về tiền
+                money_keywords = ['đồng', 'vnd', 'nghìn', 'ngàn',
+                                  'k', 'hết', 'mất', 'tốn', 'chi', 'xị', 'củ']
+                for keyword in money_keywords:
+                    description = re.sub(
+                        r'\s*\b' + keyword + r'\b\s*', ' ', description)
+
                 # Thêm vào kết quả nếu hợp lệ
                 if description and amount > 0:
                     result = {
                         "item": description.strip(),
                         "amount": int(amount),
                         "category": best_category,
-                        "type": transaction_type,
+                        "type": transaction_type,  # Đảm bảo type được gán đúng
                         "wallet": wallet
                     }
                     results.append(result)
-        
+
         return results
 
     def categorize_transaction(self, description: str) -> dict:
         """Phân loại giao dịch dựa trên mô tả"""
         description = description.lower()
-        
+
         # Tìm category phù hợp nhất dựa trên từ khóa
         best_match = None
         max_matches = 0
-        
+
         for category_id, category in self.category_keywords.items():
             matches = 0
             for keyword in category["keywords"]:
                 if keyword in description:
                     matches += 1
-            
+
             if matches > max_matches:
                 max_matches = matches
                 best_match = {
@@ -190,7 +208,7 @@ class TextParser:
                     "name": category["name"],
                     "type": category["type"]
                 }
-        
+
         # Nếu không tìm thấy category phù hợp, trả về mặc định
         if not best_match:
             return {
@@ -198,5 +216,82 @@ class TextParser:
                 "name": "🍲 Ăn uống",
                 "type": "EXPENSE"
             }
-        
+
         return best_match
+
+    def extract_meaningful_phrase(self, text: str) -> str:
+        """Trích xuất cụm từ có ý nghĩa t văn bản theo cấu trúc ngữ pháp"""
+        text = text.lower()
+
+        # Định nghĩa các động từ chính và danh từ đi kèm
+        verb_noun_pairs = {
+            "ăn": ["sáng", "trưa", "tối", "vặt", "cơm", "phở", "bún", "cháo", "đồ", "bánh"],
+            "uống": ["nước", "cafe", "sinh tố", "trà sữa", "bia", "rượu"],
+            "mua": ["đồ", "sữa", "bánh", "quần áo", "giày dép", "thuốc"],
+            "xem": ["phim", "kịch", "ca nhạc", "bóng đá"],
+            "đổ": ["xăng", "dầu"],
+            "nạp": ["tiền", "thẻ", "điện thoại"],
+            "thuê": ["nhà", "trọ", "phòng"],
+            "đóng": ["tiền", "học phí", "điện", "nước"],
+            "trả": ["tiền", "nợ", "góp"],
+            "gửi": ["xe"],
+            "chơi": ["game", "điện tử", "bowling", "bi-a", "bida", "karaoke", "bóng đá", "bóng rổ", "cầu lông"],
+            "đi": ["chơi", "cafe", "xem phim", "karaoke", "du lịch", "dạo", "ăn"],
+            "đánh": ["game", "bida", "bi-a", "bowling", "cầu lông", "bóng đá"],
+            "hát": ["karaoke"],
+            # Thêm động từ đơn không cần danh từ đi kèm
+            "_single_verbs": ["chơi", "hát", "nhảy"]
+        }
+
+        # Tìm cụm động từ + danh từ
+        for verb, nouns in verb_noun_pairs.items():
+            if verb in text:
+                # Bỏ qua key đặc biệt
+                if verb == "_single_verbs":
+                    continue
+
+                # Lấy phần text sau động từ
+                after_verb = text[text.index(verb) + len(verb):].strip()
+
+                # Tìm danh từ phù hợp nhất
+                for noun in sorted(nouns, key=len, reverse=True):
+                    if noun in after_verb:
+                        return f"{verb} {noun}".strip()
+
+                # Nếu là động từ đơn có thể đứng một mình
+                if verb in verb_noun_pairs["_single_verbs"]:
+                    return verb
+
+                # Nếu không tìm thấy danh từ định nghĩa sẵn,
+                # lấy từ tiếp theo sau động từ (tối đa 2 từ)
+                next_words = ' '.join(after_verb.split()[:2])
+                if next_words:
+                    return f"{verb} {next_words}".strip()
+
+                return verb
+
+        # Nếu không tìm thấy cấu trúc động từ + danh từ,
+        # tìm từ khóa trong danh sách category
+        for category in self.category_keywords.values():
+            for keyword in sorted(category["keywords"], key=len, reverse=True):
+                if keyword in text:
+                    # Tìm thêm từ xung quanh để làm rõ nghĩa
+                    idx = text.index(keyword)
+                    words = text.split()
+                    keyword_idx = -1
+
+                    # Tìm vị trí của từ khóa trong list từ
+                    for i, word in enumerate(words):
+                        if keyword in word:
+                            keyword_idx = i
+                            break
+
+                    if keyword_idx >= 0:
+                        # Lấy tối đa 2 từ trước và sau từ khóa
+                        start = max(0, keyword_idx - 1)
+                        end = min(len(words), keyword_idx + 2)
+                        return ' '.join(words[start:end])
+
+                    return keyword
+
+        return text.strip()

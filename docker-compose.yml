@@ -1,24 +1,21 @@
 version: '3.8'
+
 services:
- api:
-   image: auroraphtgrp/uniko-finance-bot:latest
-   container_name: uniko-finance-bot
-   ports:
-     - "8000:8000"
-   volumes:
-     - .:/app
-   environment:
-     - PYTHONPATH=/app
-     - PYTHON_PATH=/app
-   restart: unless-stopped
-   healthcheck:
-     test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
-     interval: 30s
-     timeout: 10s
-     retries: 3
-     start_period: 10s
-   networks:
-     - uniko-network
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: uniko-finance-bot
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    networks:
+      - uniko-network
+
 networks:
- uniko-network:
-   driver: bridge
+  uniko-network:
+    driver: bridge
