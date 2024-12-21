@@ -4,7 +4,7 @@ import os
 # Thêm thư mục gốc vào PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.bot.finance_bot import FinanceBot
+from finance_bot import FinanceBot
 
 def main():
     bot = FinanceBot()
