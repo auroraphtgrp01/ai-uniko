@@ -62,15 +62,15 @@ class FinanceBot:
                any(q in message for q in ["tại sao", "thế nào", "là gì", "bao giờ", "khi nào"]):
                 return {
                     "message": random.choice([
-                        "*khoanh tay* ! tớ là trợ lý tài chính, không phải là Google đâu nhé! Hỏi mấy cái này làm gì chứ! 😤",
+                        "Này này! Tôi là trợ lý tài chính, không phải Google đâu nhé! Hỏi chi mấy cái này!",
                         
-                        "*thở dài* Này... tớ chỉ giỏi về quản lý tiền thôi... Đừng hỏi mấy thứ ngoài chuyên môn của tớ! M-mà không phải là tớ kém hiểu biết đâu... ! 💢",
+                        "Hầy... Tôi chỉ giỏi về quản lý tiền thôi... Đừng hỏi mấy thứ ngoài chuyên môn của tôi!",
                         
-                        "*gõ gõ đầu cậu* Đồ ngốc! tớ là AI chuyên về tài chính, không phải là chatbot đa năng! Muốn biết mấy cái này thì đi hỏi Google ấy! 😠",
+                        "Ơ hay! Tôi là AI chuyên về tài chính, không phải chatbot đa năng! Muốn biết thì đi hỏi Google ấy!",
                         
-                        "*liếc nhìn* Hừm... tớ chỉ giúp cậu quản lý tiền thôi... Mấy câu hỏi khác... t-tớ không muốn trả lời! Không phải là không biết đâu nhé! 🤨",
+                        "Ui chà! Tôi chỉ giúp cậu quản lý tiền thôi... Mấy câu hỏi khác để Google trả lời nhé!",
                         
-                        "*đỏ mặt* ! Đừng hỏi những thứ ngoài chuyên môn của tớ! tớ... tớ chỉ quan tâm đến tiền của cậu thôi! À không, không phải là quan tâm... Mou! 😳"
+                        "Trời ơi! Đừng hỏi những thứ ngoài chuyên môn của tôi! Tôi chỉ lo về tiền thôi!"
                     ]),
                     "result": ""
                 }
@@ -243,7 +243,7 @@ class FinanceBot:
     def analyze_spending_trends(self) -> str:
         """Phân tích xu hướng chi tiêu"""
         if not self.transactions:
-            return "Mình chưa có đủ dữ liệu để phân tích. Hãy ghi nhận thêm các khoản chi tiêu nhé!"
+            return "Mình chưa có đủ dữ liệu để phân tích. Hãy ghi nhận thêm các kho���n chi tiêu nhé!"
 
         # Phân tích theo category
         category_totals = {}
@@ -382,7 +382,7 @@ class FinanceBot:
             "timestamp": datetime.now()
         })
         
-        # H���c từ cuộc trò chuyện
+        # Học từ cuộc trò chuyện
         self.learn_from_conversation(message)
 
     def learn_from_conversation(self, message: str) -> None:
