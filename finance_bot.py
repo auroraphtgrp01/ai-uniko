@@ -2,10 +2,10 @@ from datetime import datetime
 import random
 from typing import List, Dict, Optional
 
-from utils.amount_parser import AmountParser
-from src.utils.text_parser import TextParser
-from bot.personality import BotPersonality
-from utils.openai_handler import OpenAIHandler
+from amount_parser import AmountParser
+from text_parser import TextParser
+from personality import BotPersonality
+from openai_handler import OpenAIHandler
 
 class FinanceBot:
     def __init__(self, openai_api_key: str = None):

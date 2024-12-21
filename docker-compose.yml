@@ -2,19 +2,13 @@ version: '3.8'
 
 services:
   api:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: auroraphtgrp/uniko-finance-bot:latest
     container_name: uniko-finance-bot
     ports:
       - "8000:8000"
     volumes:
-      - ./src:/app/src
-    environment:
-      - PYTHONPATH=/app
+      - .:/app
     restart: unless-stopped
-    networks:
-      - uniko-network
 
 networks:
   uniko-network:

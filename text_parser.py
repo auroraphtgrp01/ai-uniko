@@ -1,5 +1,5 @@
-from src.utils.amount_parser import AmountParser
-from src.models.wallet import Wallet
+from amount_parser import AmountParser
+from wallet import Wallet
 import re
 from typing import Dict, List
 import sys
